@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faculty Admin Panel</title>
+    <style>
+        body { font-family: Arial; background: #f2f2f2; }
+        .panel {
+            width: 70%;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            margin-top: 40px;
+            border-radius: 8px;
+        }
+        .log {
+            background: #eee;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2>Faculty Admin Panel</h2>
+
+    {% for log in logs %}
+        <div class="log">{{ log }}</div>
+    {% else %}
+        <p>No session logs yet.</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>

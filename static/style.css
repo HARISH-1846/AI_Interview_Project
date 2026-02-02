@@ -1,0 +1,114 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+}
+
+/* MAIN CARD */
+.container {
+    width: 75%;
+    margin: auto;
+    background: #ffffff;
+    padding: 30px;
+    margin-top: 35px;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+}
+
+.header h1 {
+    color: #1a237e;
+    margin: 0;
+}
+
+.company-tag {
+    background: #1a237e;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+/* STATUS BAR */
+.settings {
+    display: flex;
+    justify-content: space-between;
+    background: #f5f7fa;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+/* WEBCAM */
+.webcam-box {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin: 15px 0;
+}
+
+video {
+    border-radius: 10px;
+    border: 3px solid #1a237e;
+}
+
+/* QUESTION */
+.question-box {
+    background: #eef2ff;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 6px solid #3949ab;
+}
+
+/* TEXTAREA */
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTONS */
+button {
+    background: #1a237e;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0d154f;
+}
+
+.start-btn {
+    background: #2e7d32;
+    margin: 15px 0;
+}
+
+/* RESULT */
+.result {
+    margin-top: 20px;
+    background: #e8f5e9;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #2e7d32;
+}
+
+/* WARNING */
+#warnBox {
+    font-weight: bold;
+}

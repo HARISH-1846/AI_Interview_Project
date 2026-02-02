@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MNC Virtual Interview Portal</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container" id="panel">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div style="display:flex;align-items:center;gap:15px;">
+            <!-- DEFAULT COMPANY LOGO -->
+            <img id="companyLogo"
+                 src="/static/Zoho_logo.png"
+                 alt="Company Logo"
+                 style="height:50px;cursor:pointer;"
+                 onclick="document.getElementById('logoInput').click()">
+            <h1>Virtual Interview Portal</h1>
+        </div>
+        <div class="company-tag">MNC Recruitment</div>
+    </div>
+
+    <!-- HIDDEN LOGO INPUT -->
+    <input type="file"
+           id="logoInput"
+           accept="image/*"
+           style="display:none"
+           onchange="loadLogo(event)">
+
+    <!-- START -->
+    <button class="start-btn" id="startBtn" onclick="startInterview()">
+        Start Interview
+    </button>
+
+    <!-- STATUS -->
+    <div class="settings">
+        <div><b>Round:</b> {{ result.type if result else "Interview" }}</div>
+        <div>⏱ Time: <span id="time">60</span>s</div>
+        <div id="warnBox">⚠ Warnings: <span id="warnCount">0</span>/2</div>
+    </div>
+
+    <!-- WEBCAM -->
+    <div class="webcam-box">
+        <video id="webcam" width="220" height="160" autoplay muted></video>
+        <canvas id="canvas" width="220" height="160" style="display:none;"></canvas>
+        <div style="font-size:12px;color:#555;">
+            Webcam monitoring active
+        </div>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="question-box">
+        <h3>Interview Question</h3>
+        <p id="question">{{ question }}</p>
+        <button onclick="speakQuestion()">🔊 Hear Question</button>
+    </div>
+
+    <!-- ANSWER -->
+    <form method="POST" id="answerForm">
+        <textarea name="answer" id="answer"
+         placeholder="Type your answer or speak..."></textarea><br><br>
+        <button type="button" onclick="startVoice()">🎤 Speak Answer</button>
+        <button type="submit" id="submitBtn">Submit</button>
+    </form>
+
+</div>
+
+<!-- ALERT SOUND -->
+<audio id="alertSound">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
+<script>
+let warnings = 0, started = false, timeLeft = 60;
+let stream = null;
+let lastFrame = null;
+
+/* CHANGE LOGO (ON CLICK) */
+function loadLogo(event) {
+    const img = document.getElementById("companyLogo");
+    img.src = URL.createObjectURL(event.target.files[0]);
+}
+
+/* START INTERVIEW */
+function startInterview() {
+    started = true;
+    document.documentElement.requestFullscreen();
+    document.getElementById("startBtn").disabled = true;
+    startWebcam();
+}
+
+/* WARNING HANDLER */
+function violation(msg) {
+    warnings++;
+    document.getElementById("warnCount").innerText = warnings;
+    document.getElementById("warnBox").style.color = "red";
+    document.getElementById("alertSound").play();
+    alert("⚠ " + msg);
+
+    if (warnings >= 2) {
+        document.getElementById("answerForm").action = "/completed";
+        document.getElementById("submitBtn").click();
+    }
+}
+
+/* TIMER */
+setInterval(() => {
+    if (!started) return;
+    timeLeft--;
+    document.getElementById("time").innerText = timeLeft;
+    if (timeLeft <= 0) violation("Time expired");
+}, 1000);
+
+/* TAB SWITCH */
+document.addEventListener("visibilitychange", () => {
+    if (started && document.hidden) violation("Tab switched");
+});
+
+/* WEBCAM + FACE PRESENCE */
+function startWebcam() {
+    const video = document.getElementById("webcam");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(s => {
+            stream = s;
+            video.srcObject = s;
+        })
+        .catch(() => violation("Webcam permission denied"));
+
+    setInterval(() => {
+        if (!started) return;
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const frame = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+        if (lastFrame) {
+            let diff = 0;
+            for (let i = 0; i < frame.length; i += 1000) {
+                diff += Math.abs(frame[i] - lastFrame[i]);
+            }
+            if (diff < 500) violation("Face not detected (no movement)");
+        }
+        lastFrame = frame;
+    }, 5000);
+}
+
+/* TEXT TO SPEECH */
+function speakQuestion() {
+    speechSynthesis.speak(
+        new SpeechSynthesisUtterance(
+            document.getElementById("question").innerText
+        )
+    );
+}
+
+/* SPEECH TO TEXT */
+function startVoice() {
+    const r = new webkitSpeechRecognition();
+    r.lang = "en-US";
+    r.start();
+    r.onresult = e =>
+        document.getElementById("answer").value =
+        e.results[0][0].transcript;
+}
+</script>
+
+</body>
+</html>
