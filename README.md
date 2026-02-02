@@ -9,20 +9,20 @@ The application is suitable for students, job seekers, and anyone preparing for 
 ## 📁 Project Structure
 AI_Interview_Project/
 │
-├── app.py # Main Flask application
-├── questions.py # Interview questions logic
+├── app.py # Flask application entry point
+├── questions.py # Interview questions and logic
 │
-├── templates/
+├── templates/ # HTML templates
 │ ├── index.html # Interview start page
 │ ├── admin.html # Admin / control page
 │ └── completed.html # Interview completion page
 │
-├── static/
-│ ├── style.css # Application styling
-│ └── Zoho_logo.png # Logo asset
+├── static/ # Static assets
+│ ├── style.css # CSS styling
+│ └── Zoho_logo.png # Image asset
 │
-├── .gitignore
-└── README.md
+├── .gitignore # Git ignore rules
+└── README.md # Project documentation
 
 ---
 
