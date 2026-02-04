@@ -4,7 +4,6 @@ from questions import hr_questions, technical_questions, coding_questions
 
 app = Flask(__name__)
 
-# GLOBAL SESSION LOG (mini-project level)
 SESSION_LOGS = []
 
 def evaluate_answer(answer):
